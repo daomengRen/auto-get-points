@@ -19,4 +19,4 @@ Fork 本仓库，然后点击你的仓库右上角的 Settings，找到 Secrets 
 
 **注意：** 为了实现某个链接/帐户访问出错时不中断程序继续尝试下一个，GitHub Actions 的状态将永远是“通过”（显示绿色的✔），请自行检查 GitHub Actions 日志 `Get points` 项的输出确定程序执行情况。
 
-run手动触发1
+run手动触发
