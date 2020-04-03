@@ -11,7 +11,7 @@ def randomly_gen_uspace_url():
     # 访问小黑屋用户空间不会获得积分、生成的随机数可能会重复，这里多生成两个链接用作冗余
     for i in range(12):
         uid = random.randint(10000, 35000)
-        url = "https://www.hostloc.com/space-uid-{}.html".format(str(uid))
+        url = "https://ssdforum.org/space-uid-{}.html".format(str(uid))
         url_list.append(url)
     return url_list
 
@@ -21,7 +21,7 @@ def login(username, password):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36"
     }
-    login_url = "https://www.hostloc.com/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1"
+    login_url = "https://ssdforum.org/member.php?mod=logging&action=login&loginsubmit=yes&infloat=yes&lssubmit=yes&inajax=1"
     login_data = {
         "fastloginfield": "username",
         "username": username,
@@ -34,11 +34,11 @@ def login(username, password):
 
 # 通过抓取用户设置页面的标题检查是否登录成功
 def check_login_status(s, number_c):
-    test_url = "https://www.hostloc.com/home.php?mod=spacecp"
+    test_url = "https://ssdforum.org/home.php?mod=spacecp"
     res = s.get(test_url)
     res.encoding = "utf-8"
     test_title = re.findall("<title>.*?</title>", res.text)
-    if test_title[0] != "<title>个人资料 -  全球主机交流论坛 -  Powered by Discuz!</title>":
+    if test_title[0] != "<title>个人资料 -  SSDForum -  Powered by Discuz!</title>":
         print("第" + str(number_c) + "个帐户登录失败！")
         return False
     else:
