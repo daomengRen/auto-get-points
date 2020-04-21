@@ -16,7 +16,6 @@ def randomly_gen_uspace_url():
         url_list.append(url)
     return url_list
 
-
 # 登录帐户
 def login(username, password):
     headers = {
@@ -63,11 +62,70 @@ def get_points(s, number_c):
     else:
         print("请检查你的帐户是否正确！")
 
+# 依次留言随机生成的用户空间链接获取积分
+def get_liuyan_points(s,number_c):
+    if check_login_status(s, number_c):
+        url = "https://ssdforum.org/home.php?mod=spacecp&ac=comment&inajax=1"
+        uid = [306242, 316866, 10196, 250177, 78299, 315148, 58578, 18931]
+        res = s.get("https://ssdforum.org/forum.php")
+        matchObj = re.search(r'formhash=.*?"', str(res.content))
+        str1 = str(matchObj.group())
+        # 使用for和try/except实现当前链接访问出错时不中断程序继续访问下一个链接
+        for i in range(len(uid)):
+            try:
+                data = {
+                    "message": "[em:3:]",
+                    "referer": "home.php%3Fmod%3Dspace%26uid%3D%26do%3Dwall",
+                    "id": str(uid[i]),
+                    "idtype": "uid",
+                    "handlekey": "qcwall_" + str(uid[i]),
+                    "commentsubmit": "true",
+                    "quickcomment": "true",
+                    "formhash": str1[9:17],
+                }
+                r = s.post(url, data=data)
+                if re.search(r'\\xb2\\xd9\\xd7\\xf7\\xb3\\xc9\\xb9\\xa6', str(r.content)):
+                    print("用户空间：" + "https://ssdforum.org/home.php?mod=space&uid=" + str(uid[i]) + "&do=wall " + " 留言成功")
+                time.sleep(61)  # 每访问一个链接后休眠4秒，以避免触发论坛的防cc机制
+            except Exception as e:
+                print("链接访问异常：" + str(e))
+                continue
+    else:
+        print("请检查你的帐户是否正确！")
+
+# 依次留言随机生成的用户空间链接获取积分
+def get_dazhaohu_points(s,number_c):
+    uid = [110651,250177,715,311110,27929,5190]
+    if check_login_status(s, number_c):
+        # 使用for和try/except实现当前链接访问出错时不中断程序继续访问下一个链接
+        for i in range(len(uid)):
+            try:
+                url = "https://ssdforum.org/home.php?mod=spacecp&ac=poke&op=send&uid=" + str(uid[i])+"&inajax=1"
+                res = s.get("https://ssdforum.org/forum.php")
+                matchObj = re.search(r'formhash=.*?"', str(res.content))
+                str1 = str(matchObj.group())
+                data = {
+                    "referer": "https%3A%2F%2Fssdforum.org%2Fspace-uid-"+str(uid[i])+".html",
+                    "pokesubmit": "true",
+                    "formhash": str1[9:17],
+                    "from": "",
+                    "handlekey": "a_poke_"+str(uid[i]),
+                    "iconid": "3",
+                     "note" : "",
+                }
+                r = s.post(url, data=data)
+                if re.search(r'succeedhandle_a_poke_', str(r.content)):
+                    print("用户空间：" + "https://ssdforum.org/home.php?mod=space&uid=" + str(uid[i]) + " 打招呼成功")
+                time.sleep(10)  # 每访问一个链接后休眠4秒，以避免触发论坛的防cc机制
+            except Exception as e:
+                print("链接访问异常：" + str(e))
+                continue
+    else:
+        print("请检查你的帐户是否正确！")
 
 if __name__ == "__main__":
     username = os.environ["HOSTLOC_USERNAME"]
     password = os.environ["HOSTLOC_PASSWORD"]
-
     # 分割用户名和密码为列表
     user_list = username.split(",")
     passwd_list = password.split(",")
@@ -81,13 +139,13 @@ if __name__ == "__main__":
         # 使用for和try/except实现当前用户获取积分出错时不中断程序继续尝试下一个用户
         for i in range(len(user_list)):
             try:
-                s = login(user_list[i], passwd_list[i])
-                get_points(s, i + 1)
+                #s = login(user_list[i], passwd_list[i])
+                #get_points(s, i + 1)
+                #get_liuyan_points(s,i+1)
+                #get_dazhaohu_points(s,i+1)
                 print("**************************************************")
             except Exception as e:
                 print("获取积分异常：" + str(e))
             continue
 
         print("程序执行完毕，获取积分结束")
-
-        
