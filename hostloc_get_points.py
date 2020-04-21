@@ -139,10 +139,10 @@ if __name__ == "__main__":
         # 使用for和try/except实现当前用户获取积分出错时不中断程序继续尝试下一个用户
         for i in range(len(user_list)):
             try:
-                #s = login(user_list[i], passwd_list[i])
-                #get_points(s, i + 1)
-                #get_liuyan_points(s,i+1)
-                #get_dazhaohu_points(s,i+1)
+                s = login(user_list[i], passwd_list[i])
+                get_points(s, i + 1)
+                get_liuyan_points(s,i+1)
+                get_dazhaohu_points(s,i+1)
                 print("**************************************************")
             except Exception as e:
                 print("获取积分异常：" + str(e))
